@@ -13,7 +13,7 @@ const word = "mognolia";
 const  guessedLetters = [];
 
 // New word placeholder for letters
-const newWord = function (word) {
+const placeholder = function (word) {
     const placeholderLetters = [];
     for (const letter of word) {
         console.log(letter);
@@ -22,16 +22,16 @@ const newWord = function (word) {
     wordInProgress.innerText = placeholderLetters.join("");
 };
 
-newWord(word);
+placeholder(word);
 
 // Guess Button Event Listeners
 guessButton.addEventListener("click", function (e) {
     e.preventDefault();
-    inputMessage.innertext = ""; //Empty message <p>
+    inputMessage.innerText = ""; //Empty message <p>
     const guess = inputLetter.value; //Grab Input
     // console.log(guess);
-    const goodguess = checkInput(guess); //Check input
-    if (goodguess) {
+    const goodGuess = checkInput(guess); //Check input
+    if (goodGuess) {
         makeGuess(guess);
     }
     inputLetter.value = "";
@@ -40,11 +40,11 @@ guessButton.addEventListener("click", function (e) {
 guessButton.addEventListener("keydown", function (e) {
     if (e.key == Enter) {
         e.preventDefault();
-        inputMessage.innertext = ""; //Empty message <p>
+        inputMessage.innerText = ""; //Empty message <p>
         const guess = inputLetter.value; //Grab Input
         // console.log(guess);
-        const goodguess = checkInput(guess); //Check input
-        if (goodguess) {
+        const goodGuess = checkInput(guess); //Check input
+        if (goodGuess) {
             makeGuess(guess);
         }
         inputLetter.value = "";
@@ -62,7 +62,6 @@ const checkInput = function (input) {
         inputMessage.innerText = "Please enter a letter from A to Z.";
     } else {
         return input;
-
     };
 };
 
@@ -74,7 +73,44 @@ const makeGuess = function (guess) {
     } else {
         guessedLetters.push(guess);
         console.log(guessedLetters);
-    
+        showGuessedLetters();
+        updateWordInProgress(guessedLetters);
     }
 
+};
+
+//Update the page w/ players guess
+const showGuessedLetters = function() {
+    guessedLettersElement.innerHTML = "";
+    for (const letter of guessedLetters) {
+        const li = document.createElement("li");
+        li.innerText = letter;
+        guessedLettersElement.append(li);
+    }
+};
+
+//Replace the ● w/ correct letter
+const updateWordInProgress = function (guessedLetters) {
+    const wordUpper = word.toUpperCase();
+    const wordArray = wordUpper.split("");
+    // console.log(wordArray);
+    const revealWord = [];
+    for (const letter of wordArray) {
+        if (guessedLetters.includes(letter)) {
+            revealWord.push(letter.toUpperCase());
+        } else {
+            revealWord.push("●");
+        }
+    }
+    // console.log(revealWord);
+    wordInProgress.innerText = revealWord.join("");
+    checkIfWon();
+};
+
+//Check if successfully guessed the word
+const checkIfWon = function () {
+    if (word.toUpperCase() === wordInProgress.innerText) {
+        inputMessage.classList.add("win");
+        inputMessage.innerHTML = `<p class="highlight">You guessed the correct word! Congradulations!</p>`;
+    }
 };
