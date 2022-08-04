@@ -59,7 +59,7 @@ guessButton.addEventListener("keydown", function (e) {
         }
         inputLetter.value = "";
     }
-});   
+});
 
 // Check Players input
 const checkInput = function (input) {
@@ -131,6 +131,7 @@ const updateRemainingGuesses = function (guess) {
     if (remainingGuesses === 0) {
         inputMessage.innerHTML = `Game Over! The word was <span class="highlight">${word}</span>.`;
         remainingGuessSpan.innerText = `${remainingGuesses} guesses`;
+        startOver();
     } else if (remainingGuesses === 1) {
         remainingGuessSpan.innerText = `${remainingGuesses} guess`;
     } else {
@@ -143,5 +144,26 @@ const checkIfWon = function () {
     if (word.toUpperCase() === wordInProgress.innerText) {
         inputMessage.classList.add("win");
         inputMessage.innerHTML = `<p class="highlight">You guessed the correct word! Congradulations!</p>`;
+        startOver();
     }
 };
+
+//Hide Guess and show Play Again Button
+const startOver = function (){
+    guessButton.classList.add("hide");
+    guessedLettersElement.classList.add("hide");
+    remainingGuessElement.classList.add("hide");
+    playAgainButton.classList.remove("hide");
+};
+
+
+// Play Again Button Event Listeners
+playAgainButton.addEventListener("click", function (){
+    inputMessage.classList.remove("win");
+    guessedLetters = [];
+    remainingGuesses = 8;
+    remainingGuessSpan.innerText = `${remainingGuesses} guesses`;
+    guessedLettersElement.innerHTML = "";
+    inputMessage.innerText = "";
+  getWord();
+});
